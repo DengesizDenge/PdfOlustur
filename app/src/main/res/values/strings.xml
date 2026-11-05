@@ -1,0 +1,12 @@
+<resources>
+    <string name="app_name">PDF Oluştur</string>
+    <string name="take_photo">📷 Fotoğraf Çek</string>
+    <string name="pick_photos">🖼️ Galeri\'den Seç (Çoklu)</string>
+    <string name="create_pdf">📄 PDF Oluştur</string>
+    <string name="pdf_created">PDF oluşturuldu: %1$s</string>
+    <string name="pdf_error">PDF oluşturulurken hata: %1$s</string>
+    <string name="no_photos">Lütfen önce fotoğraf ekleyin.</string>
+    <string name="creating_pdf">PDF oluşturuluyor…</string>
+    <string name="camera_permission">Kamera izni gerekiyor.</string>
+    <string name="photo_label">Fotoğraf %1$d</string>
+</resources>

@@ -1,0 +1,7 @@
+<resources>
+    <string name="count_zero">0 fotoğraf</string>
+    <string name="move_up">▲</string>
+    <string name="move_down">▼</string>
+    <string name="delete">🗑</string>
+    <string name="photo_desc">Fotoğraf</string>
+</resources>
