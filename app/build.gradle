@@ -31,4 +31,10 @@ dependencies {
     implementation 'androidx.activity:activity:1.9.3'
     implementation 'androidx.recyclerview:recyclerview:1.3.2'
     implementation 'androidx.core:core:1.15.0'
+
+    // Bağımlılıklar arası kotlin-stdlib sınıf çakışmasını düzeltir
+    constraints {
+        implementation('org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.8.22') { because 'duplicate sınıf hatalarını önler' }
+        implementation('org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.8.22') { because 'duplicate sınıf hatalarını önler' }
+    }
 }
