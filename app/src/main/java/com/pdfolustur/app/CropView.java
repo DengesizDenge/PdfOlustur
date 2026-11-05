@@ -64,6 +64,7 @@ public class CropView extends View {
     public Bitmap getBitmap() { return bmp; }
 
     public void resetCorners() {
+        if (bmp == null) return;
         bmpRect.set(0, 0, bmp.getWidth(), bmp.getHeight());
         corners[0] = new PointF(bmpRect.left, bmpRect.top);
         corners[1] = new PointF(bmpRect.right, bmpRect.top);
@@ -72,7 +73,6 @@ public class CropView extends View {
         invalidate();
     }
 
-    /** Bitmap'i 90° sağa döndürür ve köşeleri sıfırlar. */
     public void rotate90() {
         if (bmp == null) return;
         Matrix m = new Matrix();
@@ -80,6 +80,13 @@ public class CropView extends View {
         Bitmap rotated = Bitmap.createBitmap(bmp, 0, 0, bmp.getWidth(), bmp.getHeight(), m, true);
         bmp = rotated;
         resetCorners();
+    }
+
+    /** Belleği boşaltmak için kaynak bitmap'i serbest bırakır (başarı durumunda çağrılır). */
+    public void releaseBitmap() {
+        if (bmp != null && !bmp.isRecycled()) bmp.recycle();
+        bmp = null;
+        invalidate();
     }
 
     /** Seçilen dörtlüyü bitmap koordinatlarında döndürür. */

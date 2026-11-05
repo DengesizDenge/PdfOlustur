@@ -6,8 +6,8 @@ import android.graphics.Bitmap;
 import android.graphics.PointF;
 import android.net.Uri;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -28,7 +28,6 @@ public class CropActivity extends AppCompatActivity {
 
         String uriStr = getIntent().getStringExtra("uri");
         srcUri = Uri.parse(uriStr);
-        if (getSupportActionBar() != null) setTitle("✂ Belgeyi Kırp");
 
         // Ekran boyutuna uygun alt çözünürlükte yükle (hız için)
         new Thread(() -> {
@@ -36,7 +35,10 @@ public class CropActivity extends AppCompatActivity {
             if (b != null) {
                 runOnUiThread(() -> cropView.setBitmap(b));
             } else {
-                runOnUiThread(() -> { finish(); });
+                runOnUiThread(() -> {
+                    Toast.makeText(this, "Görüntü yüklenemedi", Toast.LENGTH_SHORT).show();
+                    finish();
+                });
             }
         }).start();
 
@@ -52,45 +54,59 @@ public class CropActivity extends AppCompatActivity {
     private void applyCrop() {
         Bitmap src = cropView.getBitmap();
         if (src == null) return;
-        final Activity act = this;
         final Button apply = findViewById(R.id.btnApply);
         apply.setEnabled(false);
+        apply.setText("Kırpılıyor…");
 
         final PointF[] quad = cropView.getQuadBitmap();
 
         new Thread(() -> {
-            Bitmap out = null;
+            File savedFile = null;
             String err = null;
+            Bitmap out = null;
+            int[] dims = {1600, 1024};
             try {
-                out = Perspective.warp(src, quad, 2400);
-            } catch (Exception e) {
-                err = e.getMessage();
-            }
-            final Bitmap fOut = out;
-            final String fErr = err;
-            act.runOnUiThread(() -> {
-                if (fOut == null) {
-                    apply.setEnabled(true);
-                    android.widget.Toast.makeText(act,
-                            "Kırpma hatası: " + fErr, android.widget.Toast.LENGTH_SHORT).show();
-                    return;
-                }
-                try {
-                    File cropDir = new File(getCacheDir(), "cropped");
-                    if (!cropDir.exists()) cropDir.mkdirs();
-                    File result = new File(cropDir, "crop_" + System.currentTimeMillis() + ".jpg");
-                    try (FileOutputStream fos = new FileOutputStream(result)) {
-                        fOut.compress(Bitmap.CompressFormat.JPEG, 92, fos);
+                // Önce hedef çözünürlükte; bellek yetersiz kalırsa alt çözünürlükte tekrar dene
+                for (int maxDim : dims) {
+                    try {
+                        out = Perspective.warp(src, quad, maxDim);
+                        break;
+                    } catch (OutOfMemoryError oom) {
+                        out = null;
                     }
+                }
+                if (out == null) {
+                    err = "Yetersiz bellek (görüntü çok büyük)";
+                } else {
+                    File cropDir = new File(getCacheDir(), "cropped");
+                    if (!cropDir.exists() && !cropDir.mkdirs()) {
+                        throw new IllegalStateException("Klasör oluşturulamadı");
+                    }
+                    savedFile = new File(cropDir, "crop_" + System.currentTimeMillis() + ".jpg");
+                    try (FileOutputStream fos = new FileOutputStream(savedFile)) {
+                        out.compress(Bitmap.CompressFormat.JPEG, 92, fos);
+                    }
+                    out.recycle();
+                }
+            } catch (Throwable t) {
+                err = t.getClass().getSimpleName() + ": " + t.getMessage();
+                savedFile = null;
+            }
+
+            final File fSaved = savedFile;
+            final String fErr = err;
+            runOnUiThread(() -> {
+                if (fSaved != null) {
+                    cropView.releaseBitmap();
                     Intent i = new Intent();
                     i.putExtra("index", getIntent().getIntExtra("index", -1));
-                    i.putExtra("path", result.getAbsolutePath());
+                    i.putExtra("path", fSaved.getAbsolutePath());
                     setResult(RESULT_OK, i);
                     finish();
-                } catch (Exception e) {
+                } else {
                     apply.setEnabled(true);
-                    android.widget.Toast.makeText(act,
-                            "Kaydetme hatası: " + e.getMessage(), android.widget.Toast.LENGTH_SHORT).show();
+                    apply.setText("Kırp ve Kaydet");
+                    Toast.makeText(this, "Kırpma hatası: " + fErr, Toast.LENGTH_LONG).show();
                 }
             });
         }).start();
