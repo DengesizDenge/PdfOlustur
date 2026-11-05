@@ -31,33 +31,61 @@
         android:layout_marginStart="8dp"
         android:orientation="vertical">
 
-        <Button
-            android:id="@+id/btnUp"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:minHeight="0dp"
-            android:text="@string/move_up"
-            android:textSize="12sp" />
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
 
-        <Button
-            android:id="@+id/btnDown"
+            <Button
+                android:id="@+id/btnUp"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginEnd="3dp"
+                android:minHeight="0dp"
+                android:text="@string/move_up"
+                android:textSize="12sp" />
+
+            <Button
+                android:id="@+id/btnDown"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginStart="3dp"
+                android:minHeight="0dp"
+                android:text="@string/move_down"
+                android:textSize="12sp" />
+        </LinearLayout>
+
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:minHeight="0dp"
-            android:text="@string/move_down"
-            android:textSize="12sp" />
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/btnCrop"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginEnd="3dp"
+                android:minHeight="0dp"
+                android:backgroundTint="#1565C0"
+                android:text="✂ Kırp"
+                android:textColor="#FFFFFF"
+                android:textSize="12sp" />
+
+            <Button
+                android:id="@+id/btnDelete"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginStart="3dp"
+                android:minHeight="0dp"
+                android:backgroundTint="#C62828"
+                android:text="@string/delete"
+                android:textColor="#FFFFFF"
+                android:textSize="12sp" />
+        </LinearLayout>
     </LinearLayout>
-
-    <Button
-        android:id="@+id/btnDelete"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="6dp"
-        android:minHeight="0dp"
-        android:backgroundTint="#C62828"
-        android:text="@string/delete"
-        android:textColor="#FFFFFF"
-        android:textSize="12sp" />
 </LinearLayout>

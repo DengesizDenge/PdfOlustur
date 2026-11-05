@@ -71,6 +71,27 @@ public class MainActivity extends AppCompatActivity {
                 else toast(getString(R.string.camera_permission));
             });
 
+    private final ActivityResultLauncher<Intent> cropLauncher =
+            registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
+                Intent data = result.getData();
+                if (result.getResultCode() == RESULT_OK && data != null) {
+                    int index = data.getIntExtra("index", -1);
+                    String path = data.getStringExtra("path");
+                    if (index >= 0 && index < photos.size() && path != null) {
+                        Glideless.remove(photos.get(index).toString());
+                        photos.set(index, Uri.fromFile(new File(path)));
+                        adapter.notifyItemChanged(index);
+                    }
+                }
+            });
+
+    public void startCrop(int position) {
+        Intent i = new Intent(this, CropActivity.class);
+        i.putExtra("uri", photos.get(position).toString());
+        i.putExtra("index", position);
+        cropLauncher.launch(i);
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

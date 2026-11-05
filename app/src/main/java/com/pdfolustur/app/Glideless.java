@@ -19,6 +19,11 @@ public final class Glideless {
 
     private Glideless() {}
 
+    public static void remove(String key) {
+        Bitmap b = CACHE.remove(key);
+        if (b != null && !b.isRecycled()) b.recycle();
+    }
+
     public static void load(Context ctx, ImageView view, String key) {
         Bitmap cached = CACHE.get(key);
         if (cached != null && !cached.isRecycled()) {
@@ -45,6 +50,25 @@ public final class Glideless {
             if (bounds.outWidth > 0) {
                 while (bounds.outWidth / (sample * 2) >= maxDim) sample *= 2;
             }
+            BitmapFactory.Options opts = new BitmapFactory.Options();
+            opts.inSampleSize = Math.max(1, sample);
+            return openDecode(ctx, uri, opts);
+        } catch (Throwable t) {
+            return null;
+        }
+    }
+
+    /** Tam boyuta yakın (en uzun kenar maxDim) çözünürlükte dekodlar; kırpma ekranı kullanır. */
+    public static Bitmap decodeFull(Context ctx, Uri uri, int maxDim) {
+        try {
+            BitmapFactory.Options bounds = new BitmapFactory.Options();
+            bounds.inJustDecodeBounds = true;
+            openDecode(ctx, uri, bounds);
+            if (bounds.outWidth <= 0 || bounds.outHeight <= 0) return null;
+
+            int sample = 1;
+            while (Math.max(bounds.outWidth, bounds.outHeight) / (sample * 2) >= maxDim) sample *= 2;
+
             BitmapFactory.Options opts = new BitmapFactory.Options();
             opts.inSampleSize = Math.max(1, sample);
             return openDecode(ctx, uri, opts);

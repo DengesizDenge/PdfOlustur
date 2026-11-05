@@ -77,6 +77,12 @@ public class PhotoAdapter extends RecyclerView.Adapter<PhotoAdapter.Holder> {
             notifyItemRangeChanged(p, photos.size() - p);
             if (listener != null) listener.onChange();
         });
+
+        h.btnCrop.setOnClickListener(v -> {
+            int p = h.getBindingAdapterPosition();
+            if (p < 0) return;
+            activity.startCrop(p);
+        });
     }
 
     @Override
@@ -87,7 +93,7 @@ public class PhotoAdapter extends RecyclerView.Adapter<PhotoAdapter.Holder> {
     static class Holder extends RecyclerView.ViewHolder {
         TextView tvIndex;
         ImageView imgThumb;
-        Button btnUp, btnDown, btnDelete;
+        Button btnUp, btnDown, btnDelete, btnCrop;
 
         Holder(View v) {
             super(v);
@@ -96,6 +102,7 @@ public class PhotoAdapter extends RecyclerView.Adapter<PhotoAdapter.Holder> {
             btnUp = v.findViewById(R.id.btnUp);
             btnDown = v.findViewById(R.id.btnDown);
             btnDelete = v.findViewById(R.id.btnDelete);
+            btnCrop = v.findViewById(R.id.btnCrop);
         }
     }
 }

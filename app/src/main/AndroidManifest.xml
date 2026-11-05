@@ -24,6 +24,11 @@
         android:theme="@style/Theme.PdfOlustur">
 
         <activity
+            android:name=".CropActivity"
+            android:exported="false"
+            android:label="Belgeyi Kırp" />
+
+        <activity
             android:name=".MainActivity"
             android:exported="true">
             <intent-filter>

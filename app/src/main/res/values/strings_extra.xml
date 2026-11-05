@@ -4,4 +4,7 @@
     <string name="move_down">▼</string>
     <string name="delete">🗑</string>
     <string name="photo_desc">Fotoğraf</string>
+    <string name="rotate">⭯</string>
+    <string name="reset">Sıfırla</string>
+    <string name="apply">Kırp ve Kaydet</string>
 </resources>
