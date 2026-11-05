@@ -110,7 +110,7 @@ public class CropView extends View {
         Path quad = quadPath(dx, dy);
         overlay.reset();
         overlay.addRect(viewRect, Path.Direction.CW);
-        overlay.addPath(quad, Path.Direction.CW);
+        overlay.addPath(quad);
         overlay.setFillType(Path.FillType.EVEN_ODD);
         canvas.drawPath(overlay, darkPaint);
 
