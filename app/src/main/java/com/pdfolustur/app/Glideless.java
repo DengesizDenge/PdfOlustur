@@ -19,9 +19,9 @@ public final class Glideless {
 
     private Glideless() {}
 
+    /** Önbellekten düşürür; recycle() KULLANMAZ: ImageView hâlâ çiziyor olabilir, GC halleder. */
     public static void remove(String key) {
-        Bitmap b = CACHE.remove(key);
-        if (b != null && !b.isRecycled()) b.recycle();
+        CACHE.remove(key);
     }
 
     public static void load(Context ctx, ImageView view, String key) {

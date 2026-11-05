@@ -82,9 +82,8 @@ public class CropView extends View {
         resetCorners();
     }
 
-    /** Belleği boşaltmak için kaynak bitmap'i serbest bırakır (başarı durumunda çağrılır). */
+    /** Kaynak bitmap referansını bırakır (recycle etmez; GC halleder). */
     public void releaseBitmap() {
-        if (bmp != null && !bmp.isRecycled()) bmp.recycle();
         bmp = null;
         invalidate();
     }
